@@ -3,6 +3,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://neonSlick:theFeez@ds041556.mlab.com:41556/heroku_35lrwd31'
 app.use(bodyParser.urlencoded({extended:true,limit:'50mb'}));
 app.use(bodyParser.json({limit:'50mb'}));
 
@@ -20,7 +21,7 @@ app.get('/socket',function(req,res){
 
 app.post('/createRoom',function(req,res){
     console.log(req.body.name);
-    MongoClient.connect('mongodb://localhost:27017/musocracy', function(err, db){
+    MongoClient.connect(url, function(err, db){
       if (err){
         console.log('fuckin errors');
         throw err;
@@ -50,7 +51,7 @@ io.on('connection',function(socket){
     var list=[];
     socket.on('join',function(data){
         socket.join(data.roomCode);
-        MongoClient.connect('mongodb://localhost:27017/musocracy', function(err, db){
+        MongoClient.connect(url, function(err, db){
       if (err){
         console.log('fuckin errors');
         throw err;
