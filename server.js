@@ -49,6 +49,8 @@ app.post('/createRoom',function(req,res){
     
 });
 
+
+
 app.get('/room',function(req,res){
     
 })
@@ -59,25 +61,26 @@ io.on('connection',function(socket){
     socket.on('join',function(data){
         socket.join(data.roomCode);
         MongoClient.connect(url, function(err, db){
-      if (err){
-        console.log('fuckin errors');
-        throw err;
-      }
-        db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
-            console.log(result[0].playerList);
-            list = result[0].playerList
-        });
-            list.push(data.name);
-        db.collection('rooms').update({'roomCode': data.roomCode},{$set:{'playerList':list}});
-        db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
-            console.log(result);
+            if (err){
+                console.log('fuckin errors');
+                throw err;
+            }
+            db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
+                console.log(result[0].playerList);
+                list = result[0].playerList
+                list.push(data.name);
+                db.collection('rooms').update({'roomCode': data.roomCode},{$set:{'playerList':list}});
+                db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
+                    console.log(result);
+
+                });
+            });
             
+        
+        
+        
+        
         });
-        
-        
-        
-        
-    });
     })
     socket.emit('message','sonics the name, and speeds my game');
 });
