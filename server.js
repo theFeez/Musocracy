@@ -1,6 +1,6 @@
 var app = require('express')();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server,{origins:'*'});
+var io = require('socket.io')(server);
 var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var url = ''
