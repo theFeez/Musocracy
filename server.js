@@ -1,6 +1,6 @@
 var app = require('express')();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io')(server,{origins:'*'});
 var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var url = ''
@@ -74,7 +74,7 @@ io.on('connection',function(socket){
                     console.log(result);
 
                 });
-            });
+            }); 
             
         
         
