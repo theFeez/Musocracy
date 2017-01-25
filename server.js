@@ -3,10 +3,9 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://neonSlick:theFeez@ds041556.mlab.com:41556/heroku_35lrwd31'
+var url = ''
 app.use(bodyParser.urlencoded({extended:true,limit:'50mb'}));
 app.use(bodyParser.json({limit:'50mb'}));
-
 
 
 app.get('/',function(req,res){
@@ -14,6 +13,11 @@ app.get('/',function(req,res){
     console.log('sent');
    res.send('Asombroso!'); 
 });
+
+app.get('/text',function(req,res){
+    console.log('req recieved');
+    res.send('gay');
+})
 
 app.get('/socket',function(req,res){
     res.sendFile(__dirname+'/test.html')
