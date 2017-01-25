@@ -22,9 +22,6 @@ app.get('/text',function(req,res){
     res.send('gay');
 })
 
-app.get('/socket',function(req,res){
-    res.sendFile(__dirname+'/test.html')
-})
 
 app.post('/createRoom',function(req,res){
     console.log(req.body.name);
@@ -33,7 +30,7 @@ app.post('/createRoom',function(req,res){
         console.log('fuckin errors');
         throw err;
       }
-        db.collection('rooms').insert({'roomCode':req.body.code},function(error,response){
+        db.collection('rooms').insert({'roomCode':req.body.code,'playerList':[]},function(error,response){
             console.log('gucci');
             res.end();
             db.close();
