@@ -4,8 +4,10 @@ var io = require('socket.io')(server);
 var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var url = ''
+var cors = require('cors');
 app.use(bodyParser.urlencoded({extended:true,limit:'50mb'}));
 app.use(bodyParser.json({limit:'50mb'}));
+app.use(cors());
 
 
 app.get('/',function(req,res){
