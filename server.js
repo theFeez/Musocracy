@@ -5,6 +5,7 @@ var bodyParser=require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var url = ''
 var cors = require('cors');
+var url='mongodb://neonSlick:theFeez@ds041556.mlab.com:41556/heroku_35lrwd31'
 app.use(bodyParser.urlencoded({extended:true,limit:'50mb'}));
 app.use(bodyParser.json({limit:'50mb'}));
 app.use(cors());
