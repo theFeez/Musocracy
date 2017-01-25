@@ -81,6 +81,6 @@ io.on('connection',function(socket){
 
 
 
-server.listen('8080',function(){
+server.listen(process.env.PORT||500,function(){
     console.log('Feezolini!');
 });
