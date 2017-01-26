@@ -62,17 +62,22 @@ io.on('connection',function(socket){
                 console.log('fuckin errors');
                 throw err;
             }
+            
             db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
-                console.log(result[0].playerList);
-                list = result[0].playerList
-                list.push(data.name);
-                db.collection('rooms').update({'roomCode': data.roomCode},{$set:{'playerList':list}},function(updated){
-                    io.to(data.roomCode).emit('playerAdded',list);
-                });
-                db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
-                    console.log(result);                
+                if(result!=undefined){
+                    
+                
+                    console.log(result[0].playerList);
+                    list = result[0].playerList
+                    list.push(data.name);
+                    db.collection('rooms').update({'roomCode': data.roomCode},{$set:{'playerList':list}},function(updated){
+                        io.to(data.roomCode).emit('playerAdded',list);
+                    });
+                    db.collection('rooms').find({'roomCode':data.roomCode}).toArray(function(error,result){
+                        console.log(result);                
 
-                });
+                    });
+                }
             }); 
             
         });
