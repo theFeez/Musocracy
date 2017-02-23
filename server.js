@@ -56,7 +56,7 @@ app.get('/room',function(req,res){
 
 io.on('connection',function(socket){
    socket.on('join',function(data){
-       socket.join(data.room);
+       socket.join(data.roomCode);
        MongoClient.connect(url,function(err,db){
            if(err){
                console.log(err);
@@ -66,6 +66,7 @@ io.on('connection',function(socket){
                db.collection('rooms').update({roomCode:data.roomCode},{$push:{playerList:data.name}});
                db.collection('rooms').findOne({roomCode:data.roomCode},function(error,doc){
                    console.log('sent to room');
+                   console.log(data.roomCode);
                    io.sockets.in(data.roomCode).emit('playerAdded',{playerList:doc.playerList});
                     
                })
