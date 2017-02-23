@@ -29,10 +29,12 @@ app.post('/createRoom',function(req,res){
       if (err){
         console.log('fuckin errors');
         throw err;
+          res.end()
       }
         db.collection('rooms').insert({'roomCode':req.body.code,'playerList':[]},function(error,response){
             console.log('gucci');
             db.close();
+            res.end();
            
         });
         
