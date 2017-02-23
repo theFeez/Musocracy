@@ -66,7 +66,7 @@ io.on('connection',function(socket){
                db.collection('rooms').update({roomCode:data.roomCode},{$push:{playerList:data.name}});
                db.collection('rooms').findOne({roomCode:data.roomCode},function(error,doc){
                    console.log('sent to room');
-                   console.log(data.roomCode);
+                   console.log(data);
                    io.sockets.in(data.roomCode).emit('playerAdded',{playerList:doc.playerList});
                     
                })
