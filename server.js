@@ -56,18 +56,18 @@ app.get('/room',function(req,res){
 
 io.on('connection',function(socket){
    socket.on('join',function(data){
-       socket.join(data.roomCode);
+       socket.join(data.room);
        MongoClient.connect(url,function(err,db){
            if(err){
                console.log(err);
                
            }
            else{
-               db.collection('rooms').update({roomCode:data.roomCode},{$push:{playerList:data.name}});
-               db.collection('rooms').findOne({roomCode:data.roomCode},function(error,doc){
+               db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name}});
+               db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
                    console.log('sent to room');
-                   console.log(data);
-                   io.sockets.in(data.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                   console.log(data.room);
+                   io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
                     
                })
               
