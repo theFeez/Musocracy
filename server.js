@@ -63,13 +63,15 @@ io.on('connection',function(socket){
                
            }
            else{
-               db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name}});
-               db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
-                   console.log('sent to room');
-                   console.log(data.room);
-                   io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
+               db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name}},function(err,result){
+                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
+                        console.log('sent to room');
+                        console.log(data.room);
+                        io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
                     
-               })
+                    });
+               });
+              
               
            }
        })
