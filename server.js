@@ -56,6 +56,8 @@ app.get('/room',function(req,res){
 
 io.on('connection',function(socket){
    socket.on('join',function(data){
+       socket.nickname=data.name;
+       socket.roomCode=data.room;
        socket.join(data.room);
        MongoClient.connect(url,function(err,db){
            if(err){
@@ -75,7 +77,28 @@ io.on('connection',function(socket){
               
            }
        })
-   }) 
+   })
+   
+   
+   socket.on('disconnect',function(){
+       MongoClient.connect(url,function(err,db){
+           if(err){
+               console.log(err);
+           }
+           else{
+               db.collection('rooms').update({roomCode:socket.roomCode},{$pull:{playerList:socket.nickname}},function(error,result){
+                   if(err){
+                       console.log(error);
+                   }
+                   else{
+                       io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                   }
+               })
+           }
+       })
+       
+   })
+   
 });
 
 
