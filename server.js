@@ -123,7 +123,7 @@ io.on('connection',function(socket){
        socket.disconnected=true;
        setTimeout(function () {
             if (socket.disconnected){
-                deleteSocket();
+                deleteSocket(socket.roomCode,socket.nickname);
             } 
         }, 10000);
        
