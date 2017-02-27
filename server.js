@@ -92,7 +92,14 @@ io.on('connection',function(socket){
                    }
                    else{
                        db.collection('rooms').findOne({roomCode:socket.roomCode},function(error1,doc){
-                        io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                           if(err){
+                               console.log(err);
+                           }
+                           else{
+                               console.log(doc.playerList);
+                                io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                           }
+                       
                     
                     });
                    }
