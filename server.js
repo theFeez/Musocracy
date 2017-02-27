@@ -54,11 +54,50 @@ app.get('/room',function(req,res){
     
 })
 
+
 io.on('connection',function(socket){
+    
+    
+    function deleteSocket(room,name){
+        MongoClient.connect(url,function(err,db){
+            if(err){
+                   console.log(err);
+            }
+                else{
+                   db.collection('rooms').update({roomCode:room},{$pull:{playerList:name}},function(error,result){
+                       if(err){
+                           console.log(error);
+                       }
+                       else{
+                           db.collection('rooms').findOne({roomCode:socket.roomCode},function(error1,doc){
+                               if(err){
+                                   console.log(err);
+                               }
+                               else{
+                                   console.log(doc.playerList);
+                                    io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                               }
+
+
+                        });
+                       }
+                   })
+               }
+       })
+    }
+
+    
+    
+    
+    
+    
+    
    socket.on('join',function(data){
+       socket.disconnected = false;
        socket.nickname=data.name;
        socket.roomCode=data.room;
        socket.join(data.room);
+       
        MongoClient.connect(url,function(err,db){
            if(err){
                console.log(err);
@@ -81,31 +120,13 @@ io.on('connection',function(socket){
    
    
    socket.on('disconnect',function(){
-       MongoClient.connect(url,function(err,db){
-           if(err){
-               console.log(err);
-           }
-           else{
-               db.collection('rooms').update({roomCode:socket.roomCode},{$pull:{playerList:socket.nickname}},function(error,result){
-                   if(err){
-                       console.log(error);
-                   }
-                   else{
-                       db.collection('rooms').findOne({roomCode:socket.roomCode},function(error1,doc){
-                           if(err){
-                               console.log(err);
-                           }
-                           else{
-                               console.log(doc.playerList);
-                                io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
-                           }
-                       
-                    
-                    });
-                   }
-               })
-           }
-       })
+       socket.disconnected=true;
+       setTimeout(function () {
+            if (socket.disconnected){
+                deleteSocket();
+            } 
+        }, 10000);
+       
        
    })
    
