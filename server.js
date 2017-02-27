@@ -91,7 +91,10 @@ io.on('connection',function(socket){
                        console.log(error);
                    }
                    else{
-                       io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                       db.collection('rooms').findOne({roomCode:socket.roomCode},function(error1,doc){
+                        io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc.playerList});
+                    
+                    });
                    }
                })
            }
