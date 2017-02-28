@@ -31,7 +31,7 @@ app.post('/createRoom',function(req,res){
         throw err;
           res.end()
       }
-        db.collection('rooms').insert({'roomCode':req.body.code,'playerList':[]},function(error,response){
+        db.collection('rooms').insert({'roomCode':req.body.code,'playerList':[],'idList':[]},function(error,response){
             console.log('gucci');
             db.close();
             res.end();
