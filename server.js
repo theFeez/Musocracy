@@ -48,6 +48,16 @@ app.post('/createRoom',function(req,res){
     
 });
 
+function generate(){
+
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    for( var i=0; i < 10; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+}
+
 
 
 app.get('/room',function(req,res){
@@ -56,7 +66,7 @@ app.get('/room',function(req,res){
 
 
 io.sockets.on('connection',function(socket){
-    console.log(socket.id);
+    
     
     function deleteSocket(room,name){
         MongoClient.connect(url,function(err,db){
@@ -87,12 +97,12 @@ io.sockets.on('connection',function(socket){
     }
 
     
-    
-    
+  
     
     
     
    socket.on('join',function(data){
+       
        socket.disconnected = false;
        socket.nickname=data.name;
        socket.roomCode=data.room;
@@ -104,14 +114,20 @@ io.sockets.on('connection',function(socket){
                
            }
            else{
-               db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name}},function(err,result){
+               db.collection('rooms').findOne({roomCode:data.room},function(err,doc){
+                  if(doc.idList.indexOf(data.id)===-1){
+                     db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
                     db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
                         console.log('sent to room');
                         console.log(data.room);
                         io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
                     
                     });
+                    }); 
+                  }
                });
+               
+               
               
               
            }
@@ -120,14 +136,7 @@ io.sockets.on('connection',function(socket){
    
    
    socket.on('disconnect',function(){
-       socket.disconnected=true;
-       setTimeout(function () {
-            if (socket.disconnected){
-                deleteSocket(socket.roomCode,socket.nickname);
-            } 
-        }, 10000);
-       
-       
+       deleteSocket(socket.roomCode,socket.nickname);
    })
    
 });
