@@ -108,6 +108,7 @@ io.on('connection',function(socket){
        socket.nickname=data.name;
        socket.roomCode=data.room;
        socket.join(data.room);
+          console.log(io.sockets.adapter.rooms[data.room]);
        
        MongoClient.connect(url,function(err,db){
            if(err){
@@ -124,7 +125,7 @@ io.on('connection',function(socket){
                         console.log('sent to room');
                         console.log(doc2);
                         io.sockets.in(data.room).emit('playerAdded',{playerList:doc2.playerList});
-                        console.log(io.sockets.adapter.rooms[data.room]);                    
+                                         
                     });
                     }); 
                    }
