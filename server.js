@@ -68,7 +68,7 @@ app.get('/room',function(req,res){
 io.sockets.on('connection',function(socket){
     
     
-    function deleteSocket(room,name){
+    function deleteSocket(room,name,id){
         MongoClient.connect(url,function(err,db){
             if(err){
                    console.log(err);
