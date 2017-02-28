@@ -102,7 +102,7 @@ io.sockets.on('connection',function(socket){
     
     
    socket.on('join',function(data){
-       
+       console.log('joining');
        socket.disconnected = false;
        socket.id=data.id;
        socket.nickname=data.name;
@@ -117,7 +117,8 @@ io.sockets.on('connection',function(socket){
            else{
                db.collection('rooms').findOne({roomCode:data.room},function(err,doc){
                    console.log(doc);
-                   if(doc===undefined){
+                   
+                   if(doc===null){
                        db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
                     db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
                         console.log('sent to room');
