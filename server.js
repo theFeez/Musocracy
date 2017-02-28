@@ -65,7 +65,7 @@ app.get('/room',function(req,res){
 })
 
 
-io.sockets.on('connection',function(socket){
+io.on('connection',function(socket){
     
     
     function deleteSocket(room,name,id){
