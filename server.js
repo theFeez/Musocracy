@@ -115,17 +115,35 @@ io.sockets.on('connection',function(socket){
            }
            else{
                db.collection('rooms').findOne({roomCode:data.room},function(err,doc){
-                  if(doc.idList.indexOf(data.id)===-1){
-                     db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
-                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
+                   console.log(doc);
+                   if(doc===undefined){
+                       db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
+                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
                         console.log('sent to room');
                         console.log(data.room);
-                        io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
+                        io.sockets.in(data.room).emit('playerAdded',{playerList:doc2.playerList});
                     
                     });
                     }); 
+                   }
+                   
+                   
+                  else{
+                      if(doc.idList.indexOf(data.id)===-1){
+                      
+                     db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
+                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
+                        console.log('sent to room');
+                        console.log(data.room);
+                        io.sockets.in(data.room).emit('playerAdded',{playerList:doc2.playerList});
+                    
+                    });
+                    }); 
+                      }
+                      
                   }
                });
+               
                
                
               
