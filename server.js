@@ -124,7 +124,7 @@ io.on('connection',function(socket){
                         console.log('sent to room');
                         console.log(doc2);
                         io.sockets.in(data.room).emit('playerAdded',{playerList:doc2.playerList});
-                    
+                        console.log(io.sockets.adapter.rooms[data.room]);                    
                     });
                     }); 
                    }
