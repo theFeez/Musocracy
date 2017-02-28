@@ -137,6 +137,7 @@ io.sockets.on('connection',function(socket){
                     db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
                         console.log('sent to room');
                         console.log(data.room);
+                        console.log(doc2);
                         io.sockets.in(data.room).emit('playerAdded',{playerList:doc2.playerList});
                     
                     });
