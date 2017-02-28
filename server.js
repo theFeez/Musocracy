@@ -74,7 +74,7 @@ io.sockets.on('connection',function(socket){
                    console.log(err);
             }
                 else{
-                   db.collection('rooms').update({roomCode:room},{$pull:{playerList:name}},function(error,result){
+                   db.collection('rooms').update({roomCode:room},{$pull:{playerList:name,idList:id}},function(error,result){
                        if(err){
                            console.log(error);
                        }
@@ -104,6 +104,7 @@ io.sockets.on('connection',function(socket){
    socket.on('join',function(data){
        
        socket.disconnected = false;
+       socket.id=data.id;
        socket.nickname=data.name;
        socket.roomCode=data.room;
        socket.join(data.room);
@@ -154,7 +155,7 @@ io.sockets.on('connection',function(socket){
    
    
    socket.on('disconnect',function(){
-       deleteSocket(socket.roomCode,socket.nickname);
+       deleteSocket(socket.roomCode,socket.nickname,socket.id);
    })
    
 });
