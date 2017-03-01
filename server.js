@@ -104,9 +104,9 @@ io.on('connection',function(socket){
    socket.on('join',function(data){
        console.log('joining');
        
-     /*  socket.id=data.id;
+     // socket.id=data.id;
        socket.nickname=data.name;
-       socket.roomCode=data.room;*/
+       socket.roomCode=data.room;
        socket.join(data.room);
           console.log(io.sockets.adapter.rooms[data.room]);
        
