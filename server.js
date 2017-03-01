@@ -68,7 +68,7 @@ app.get('/room',function(req,res){
 io.on('connection',function(socket){
     
     
-    /*function deleteSocket(room,name,id){
+    function deleteSocket(room,name,id){
         MongoClient.connect(url,function(err,db){
             if(err){
                    console.log(err);
@@ -94,7 +94,7 @@ io.on('connection',function(socket){
                    })
                }
        })
-    }*/
+    }
 
     
   
@@ -116,17 +116,37 @@ io.on('connection',function(socket){
                
            }
            else{
-               
+               db.collection('rooms').findOne({roomCode:data.room},function(err,doc){
+                   console.log(doc);
                    
-                   db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
-                        db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
-                            console.log('sent to room');
-                            console.log(data.room);
-                            io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
-
-                        });
+                   if(doc===null){
+                       db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
+                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
+                        console.log('sent to room');
+                        console.log(doc2);
+                    io.socket.in(socket.roomCode).emit('playerAdded',{playerList:doc2.playerList});
+                                         
                     });
-               
+                    }); 
+                   }
+                   
+                   
+                  else{
+                      if(doc.idList.indexOf(data.id)===-1){
+                      
+                     db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
+                    db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
+                        console.log('sent to room');
+                        console.log(data.room);
+                        console.log(doc2);
+                        io.sockets.in(socket.roomCode).emit('playerAdded',{playerList:doc2.playerList});
+                    
+                    });
+                    }); 
+                      }
+                      
+                  }
+               });
                
                
                
@@ -134,6 +154,10 @@ io.on('connection',function(socket){
               
            }
        })
+   })
+   
+   socket.on('disconnect',function(){
+       deleteSocket(socket.roomCode,socket.nickname,socket.newid);
    })
    
    
