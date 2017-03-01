@@ -116,38 +116,17 @@ io.on('connection',function(socket){
                
            }
            else{
-               db.collection('rooms').findOne({roomCode:data.room},function(err,doc){
-                   console.log(doc);
+               
                    
-                   if(doc===null){
-                       db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
-                            db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
-                                console.log('sent to room');
-                                console.log(doc2);
-                                io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
-                                         
-                            });
-                        }); 
-                   }
-                   
-                   
-                  else{
-                      if(doc.idList.indexOf(data.id)===-1){
-                      console.log('true');
-                         db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
-                            db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
-                                console.log('sent to room');
-                                console.log(data.room);
-                                console.log(doc2);
-                                io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
+                   db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:socket.id}},function(err,result){
+                        db.collection('rooms').findOne({roomCode:data.room},function(error,doc){
+                            console.log('sent to room');
+                            console.log(data.room);
+                            io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
 
-                            });
-                        }); 
-                      }
-                      console.log('false');
-                      
-                  }
-               });
+                        });
+                    });
+               
                
                
                
