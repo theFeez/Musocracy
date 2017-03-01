@@ -68,7 +68,7 @@ app.get('/room',function(req,res){
 io.on('connection',function(socket){
     
     
-    function deleteSocket(room,name,id){
+    /*function deleteSocket(room,name,id){
         MongoClient.connect(url,function(err,db){
             if(err){
                    console.log(err);
@@ -94,7 +94,7 @@ io.on('connection',function(socket){
                    })
                }
        })
-    }
+    }*/
 
     
   
@@ -157,9 +157,7 @@ io.on('connection',function(socket){
    })
    
    
-   socket.on('disconnect',function(){
-       deleteSocket(socket.roomCode,socket.nickname,socket.id);
-   })
+   
    
 });
 
