@@ -85,7 +85,7 @@ io.on('connection',function(socket){
                                }
                                else{
                                    console.log(doc.playerList);
-                                    io.sockets.in(data.room).emit('playerAdded',{playerList:doc.playerList});
+                                    io.sockets.in(room).emit('playerAdded',{playerList:doc.playerList});
                                }
 
 
