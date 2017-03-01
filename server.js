@@ -104,7 +104,7 @@ io.on('connection',function(socket){
    socket.on('join',function(data){
        console.log('joining');
        
-     // socket.id=data.id;
+      socket.newid=data.id;
        socket.nickname=data.name;
        socket.roomCode=data.room;
        socket.join(data.room);
