@@ -133,7 +133,7 @@ io.on('connection',function(socket){
                    
                   else{
                       if(doc.idList.indexOf(data.id)===-1){
-                      
+                      console.log(true);
                      db.collection('rooms').update({roomCode:data.room},{$push:{playerList:data.name,idList:data.id}},function(err,result){
                     db.collection('rooms').findOne({roomCode:data.room},function(error,doc2){
                         console.log('sent to room');
