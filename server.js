@@ -1,4 +1,5 @@
-var app = require('express')();
+var express=require('express');
+var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var bodyParser=require('body-parser');
@@ -9,6 +10,7 @@ var url='mongodb://neonSlick:theFeez@ds041556.mlab.com:41556/heroku_35lrwd31'
 app.use(bodyParser.urlencoded({extended:true,limit:'50mb'}));
 app.use(bodyParser.json({limit:'50mb'}));
 app.use(cors());
+app.use(express.static(__dirname+'/client/'));
 
 
 app.get('/',function(req,res){
@@ -18,21 +20,21 @@ app.get('/',function(req,res){
 });
 
 app.get('/text',function(req,res){
-    console.log('req recieved');
-    res.send('gay');
+    console.log('test req recieved');
+    
 })
 
 
 app.post('/createRoom',function(req,res){
-    console.log(req.body.name);
+    console.log(req.body);
     MongoClient.connect(url, function(err, db){
       if (err){
-        console.log('fuckin errors');
+        console.log('errors');
         throw err;
           res.end()
       }
         db.collection('rooms').insert({'roomCode':req.body.code,'playerList':[],'idList':[]},function(error,response){
-            console.log('gucci');
+            console.log('insert success');
             db.close();
             res.end();
            
@@ -66,7 +68,7 @@ app.get('/room',function(req,res){
 
 
 io.on('connection',function(socket){
-    
+    console.log('connected');
     
     function deleteSocket(room,name,id){
         MongoClient.connect(url,function(err,db){
@@ -103,7 +105,7 @@ io.on('connection',function(socket){
     
    socket.on('join',function(data){
        console.log('joining');
-       
+       console.log(data);   
       socket.newid=data.id;
        socket.nickname=data.name;
        socket.roomCode=data.room;
@@ -169,5 +171,5 @@ io.on('connection',function(socket){
 
 
 server.listen(process.env.PORT||500,function(){
-    console.log('Feezolini!');
+    console.log('Server listening on port '+process.env.PORT);
 });
